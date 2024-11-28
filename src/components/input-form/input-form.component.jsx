@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   InputFormWrapper,
   InputFormContainer,
@@ -9,7 +9,8 @@ import { MyContext } from "@/context/context";
 
 const InputForm = () => {
   const [city, setCity] = useState(null);
-  const { unit, setUnit, setWeatherData } = useContext(MyContext);
+  const { unit, setUnit, weatherData, setWeatherData, setLoading } =
+    useContext(MyContext);
   const fRef = useRef(null);
   const cRef = useRef(null);
 
@@ -17,16 +18,27 @@ const InputForm = () => {
     e.preventDefault();
     setCity(e.target.value);
   };
+
   // Get the current weather
   const handleGetWeather = async () => {
+    setWeatherData(null);
+    setLoading(true);
     const data = await getWeather(city);
 
-    setWeatherData(data);
+    setTimeout(() => {
+      setWeatherData(data);
+    }, 2000);
   };
 
   const handleUnitChange = (e) => {
     setUnit(e.target.value);
   };
+
+  useEffect(() => {
+    if (weatherData !== null) {
+      setLoading(false);
+    }
+  }, [setLoading, weatherData]);
 
   return (
     <InputFormWrapper>

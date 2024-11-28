@@ -3,11 +3,10 @@ import tw from "tailwind-styled-components";
 export const InputFormWrapper = tw.section`
     w-full 
     border 
+    border-white/50 
     p-2 
     rounded-lg 
     bg-slate-700
-    relative
-    top-24
 `;
 
 export const InputFormContainer = tw.div`

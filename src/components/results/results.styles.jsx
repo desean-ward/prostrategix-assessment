@@ -1,13 +1,13 @@
 import Image from "next/image";
 import tw from "tailwind-styled-components";
 
-export const ResultsWrapper = tw.div`
+export const ResultsWrapper = tw.section`
     w-full 
     border 
+    border-white/50
     rounded-lg 
     bg-slate-700
     relative
-    top-24
 `;
 
 export const ResultsContainer = tw.div`
@@ -25,7 +25,6 @@ export const Result = tw.div`
     flex-col 
     gap-3
     items-center
-    border 
     p-2 
     rounded-lg 
     bg-slate-700
