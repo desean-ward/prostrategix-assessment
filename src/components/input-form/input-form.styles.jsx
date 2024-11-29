@@ -1,12 +1,14 @@
 import tw from "tailwind-styled-components";
 
 export const InputFormWrapper = tw.section`
-    w-full 
+    size-full
+    min-h-[592px]
     border 
     border-white/50 
     p-2 
     rounded-lg 
-    bg-slate-800
+    bg-slate-800 
+    flex justify-center items-center
 `;
 
 export const InputFormContainer = tw.div`

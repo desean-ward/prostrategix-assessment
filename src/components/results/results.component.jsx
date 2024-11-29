@@ -45,8 +45,8 @@ const Results = () => {
   if (loading)
     return (
       <ResultsWrapper>
-        <ResultsContainer>
-          <div className='flex justify-center items-center absolute inset-0'>
+        <ResultsContainer className='border-none'>
+          <div className='flex justify-center items-center '>
             <GridLoader color='white' />
           </div>
         </ResultsContainer>
@@ -96,7 +96,6 @@ const Results = () => {
             <p className='text-3xl'>{fiveDayData.current.temp_c}° C</p>
           )}
           <p>{fiveDayData.location.name}</p>
-          {/* <p className='text-3xl'>{fiveDayData.current.condition.text}</p> */}
           <p>
             <input
               type='checkbox'
@@ -106,6 +105,31 @@ const Results = () => {
             />
             Save As Favorite
           </p>
+
+          {/* 5 Day Forecast */}
+          <div className='mt-8 relative px-8'>
+            <p className='border-b rounded-lg text-center text-xl pb-2 mb-4'>
+              5 Day Forecast
+            </p>
+            <div className='flex flex-col md:flex-row justify-between gap-4 mb-12'>
+              {fiveDayData && fiveDayData.forecast.forecastday
+                ? fiveDayData.forecast.forecastday.map((day, index) => (
+                    <div
+                      key={index}
+                      className='flex flex-col border rounded-lg p-2 align-center'
+                    >
+                      <p>{new Date(day.date).toLocaleDateString("en-US")}</p>
+                      <p className='line-clamp-1'>{day.day.condition.text}</p>
+                      {unit && unit === "fahrenheit" ? (
+                        <p>{day.day.avgtemp_f}° F</p>
+                      ) : (
+                        <p>{day.day.avgtemp_c}° C</p>
+                      )}
+                    </div>
+                  ))
+                : "No forecast data available."}
+            </div>
+          </div>
         </Result>
       </ResultsContainer>
     </ResultsWrapper>
