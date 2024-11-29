@@ -134,7 +134,7 @@ const Results = () => {
       setFavorite(false);
       setUnit(null);
       localStorage.removeItem("forecast-city");
-      localStorage.removeItem("forecast-unit");
+      localStorage.setItem("forecast-unit", "fahrenheit");
     }
   };
 
@@ -171,7 +171,7 @@ const Results = () => {
               type='checkbox'
               className='mr-2'
               checked={isChecked}
-              onClick={handleCheckboxChange}
+              onChange={handleCheckboxChange}
             />
             Save As Favorite
           </p>
