@@ -1,3 +1,4 @@
+"use client"
 import React, { useContext, useState } from "react";
 import {
   InputFormWrapper,
@@ -86,7 +87,7 @@ const InputForm = () => {
           {/* Submit button */}
           <button
             type='submit'
-            className='w-full p-2 text-2xl font-bold text-black duration-300 ease-in-out bg-white border border-black rounded-lg hover:text-white hover:bg-gradient-to-r g-gradient-to-b from-black to-slate-800 trasition-colors hover:border-white/50'
+            className='w-full p-2 text-2xl font-bold text-black duration-300 ease-in-out bg-white border border-black rounded-lg hover:text-white hover:bg-gradient-to-r from-black to-slate-800 trasition-colors hover:border-white/50 hover:dhadow-black hover:shadow-2xl'
           >
             Enter
           </button>
