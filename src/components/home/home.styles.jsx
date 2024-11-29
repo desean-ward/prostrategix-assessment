@@ -6,9 +6,8 @@ export const HomeWrapper = tw.div`
     justify-center  
     h-screen
     w-full 
-    max-w-7xl 
     mx-auto
-    px-12
+    px-24
 `;
 
 export const HomeContainer = tw.div`

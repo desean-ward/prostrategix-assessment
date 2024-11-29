@@ -4,26 +4,31 @@ import { createContext, useState } from "react";
 export const MyContext = createContext({
   unit: null,
   setUnit: () => {},
-  weatherData: null,
-  setWeatherData: () => {},
-  loading: null,
+  fiveDayData: null,
+  setFiveDayData: () => {},
+  loading: false,
   setLoading: () => {},
+  favorite: false,
+  setFavorie: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
   const [unit, setUnit] = useState("fahrenheit");
-  const [weatherData, setWeatherData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [fiveDayData, setFiveDayData] = useState(null);
+  const [loading, setLoading] = useState(null);
+  const [favorite, setFavorite] = useState(null);
 
   return (
     <MyContext.Provider
       value={{
         unit,
         setUnit,
-        weatherData,
-        setWeatherData,
+        fiveDayData,
+        setFiveDayData,
         loading,
         setLoading,
+        favorite,
+        setFavorite,
       }}
     >
       {children}

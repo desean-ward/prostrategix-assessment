@@ -6,7 +6,7 @@ export const InputFormWrapper = tw.section`
     border-white/50 
     p-2 
     rounded-lg 
-    bg-slate-700
+    bg-slate-800
 `;
 
 export const InputFormContainer = tw.div`
