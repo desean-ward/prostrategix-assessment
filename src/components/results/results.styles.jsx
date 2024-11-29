@@ -2,7 +2,8 @@ import Image from "next/image";
 import tw from "tailwind-styled-components";
 
 export const ResultsWrapper = tw.section`
-    size-full
+    size-full 
+    max-h-[592px]
     border 
     border-white/50
     rounded-lg 
@@ -17,7 +18,7 @@ export const ResultsContainer = tw.div`
     flex 
     flex-col 
     justify-center
-    p-8 
+    pb-4 
 `;
 
 export const Result = tw.div`
@@ -29,5 +30,16 @@ export const Result = tw.div`
 `;
 
 export const WeatherImage = tw(Image)`
-    w-full
+    relative 
+    top-4
+`;
+
+export const ForecastCard = tw.div`
+    forecast 
+    flex 
+    flex-col 
+    border 
+    rounded-lg 
+    p-2 
+    align-center
 `;

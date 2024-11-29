@@ -11,7 +11,7 @@ export const HomeContainer = tw.div`
     lg:flex-row
     justy-center 
     items-center
-    size-full
+    w-full
     max-w-7xl
     lg:h-fit
     absolute 

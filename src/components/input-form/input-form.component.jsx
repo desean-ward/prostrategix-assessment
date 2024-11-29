@@ -41,7 +41,7 @@ const InputForm = () => {
         <form
           action={handleGetWeather}
           method='post'
-          className='flex flex-col gap-4'
+          className='flex flex-col gap-4 shadow-xl shadow-black'
         >
           <div className='bg-white text-black flex flex-col gap-4 rounded-lg p-4'>
             <p className='text-3xl font-semibold'>Anytime Weather</p>
