@@ -99,7 +99,7 @@ const Results = () => {
       <ResultsWrapper>
         <ResultsContainer className='border-none'>
           {/* Loading Spinner */}
-          <div className='flex justify-center items-center '>
+          <div className='flex items-center justify-center '>
             <GridLoader color='white' />
           </div>
         </ResultsContainer>
@@ -149,6 +149,7 @@ const Results = () => {
             alt='Image'
             width={200}
             height={200}
+            className="-mt-8"
           />
 
           {/* Temperature */}
@@ -161,6 +162,8 @@ const Results = () => {
               {fiveDayData.current.temp_c}° C
             </p>
           )}
+          
+          <p className='text-2xl'>{fiveDayData.current.condition.text}</p>
 
           {/* City Name */}
           <p id='city'>{fiveDayData.location.name}</p>
@@ -177,26 +180,40 @@ const Results = () => {
           </p>
 
           {/* 5 Day Forecast */}
-          <div className='mt-2 relative px-8'>
+          <div className='relative px-4 mt-2'>
             <p
               id='forcast-text'
-              className='border-b border-white/50 text-center text-xl pb-2 mb-4'
+              className='py-2 mb-8 text-xl text-center border-t border-b border-white/50'
             >
               5 Day Forecast
             </p>
 
             {/* 5 Day Forecast Cards */}
-            <div className='flex flex-col md:flex-row justify-between gap-4 mb-12'>
+            <div className='flex flex-col justify-between gap-4 mb-12 md:flex-row'>
               {fiveDayData && fiveDayData.forecast.forecastday
                 ? fiveDayData.forecast.forecastday.map((day, index) => (
-                    <ForecastCard key={index}>
-                      <p>{new Date(day.date).toLocaleDateString("en-US")}</p>
-                      <p className='line-clamp-1'>{day.day.condition.text}</p>
+                    <ForecastCard key={index} className="text-center">
+                    {/* Date */}
+                      <p className="mb-2 text-sm font-semibold border-b">{new Date(day.date).toDateString().slice(0, 10)}</p>
+                                    
+                      {/* Temperature */}
                       {unit && unit === "fahrenheit" ? (
-                        <p>{day.day.avgtemp_f}° F</p>
+                        <p>{day.day.mintemp_f}° / {day.day.maxtemp_f}°</p>
                       ) : (
                         <p>{day.day.avgtemp_c}° C</p>
                       )}
+                      
+                      {/* Weather Image */}
+                      <WeatherImage
+                        src={`https:${day.day.condition.icon}`}
+                        alt='Image'
+                        width={50}
+                        height={50}
+                        className="mx-auto mb-4 -mt-4"
+                      />
+                      
+                      {/* Condition */}
+                      <p className="line-clamp-1">{day.day.condition.text}</p>
                     </ForecastCard>
                   ))
                 : "No forecast data available."}

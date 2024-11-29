@@ -12,16 +12,17 @@ export const HomeContainer = tw.div`
     justy-center 
     items-center
     w-full
-    max-w-7xl
     lg:h-fit
     absolute 
     top-40
-    p-8    
+    px-4
+    md:px-12
+    lg:px-56   
 
     lg:grid 
     grid-cols-2 
     grid-rows-1
-    gap-8     
+    gap-8    
     top-1/2 
     lg:left-1/2 
     transform 

@@ -40,9 +40,9 @@ const InputForm = () => {
       <InputFormContainer>
         <form
           action={handleGetWeather}
-          className='flex flex-col gap-4 shadow-xl shadow-black'
+          className='flex flex-col w-full gap-8 px-12 -mt-4'
         >
-          <div className='bg-white text-black flex flex-col gap-4 rounded-lg p-4'>
+          <div className='flex flex-col gap-4 px-4 py-12 rounded-lg '>
             <p className='text-3xl font-semibold'>Anytime Weather</p>
             <p>Enter city below</p>
 
@@ -55,7 +55,7 @@ const InputForm = () => {
 
             {/* Radio Buttons */}
             <div className='flex gap-8'>
-              <span>
+              <span className='flex gap-2 text-2xl'>
                 <input
                   type='radio'
                   id='fahrenheit'
@@ -68,14 +68,14 @@ const InputForm = () => {
                 F
               </span>
 
-              <span>
+              <span className='flex gap-2 text-2xl'>
                 <input
                   type='radio'
                   id='celcius'
                   name='temperature'
                   value='celcius'
                   checked={unit === "celcius"}
-                  className='cursor-pointer'
+                  className='cursor-pointer hover:bg-gradient-to-r g-gradient-to-b hovefrom-black to-slate-800'
                   onChange={handleUnitChange}
                 />{" "}
                 C
@@ -86,7 +86,7 @@ const InputForm = () => {
           {/* Submit button */}
           <button
             type='submit'
-            className='border border-black bg-white text-black p-2 rounded-lg'
+            className='w-full p-2 text-2xl font-bold text-black duration-300 ease-in-out bg-white border border-black rounded-lg hover:text-white hover:bg-gradient-to-r g-gradient-to-b from-black to-slate-800 trasition-colors hover:border-white/50'
           >
             Enter
           </button>
