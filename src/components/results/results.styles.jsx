@@ -12,7 +12,6 @@ export const ResultsWrapper = tw.section`
     flex-col 
     justify-center
     items-center
-    overflow-hidden
     p-5
 `;
 
@@ -42,7 +41,8 @@ export const WeatherImage = tw(Image)`
 
 export const ForecastCard = tw.div`
     forecast 
-    w-full
+    w-full 
+    min-w-[120px]
     flex 
     flex-col 
     border 

@@ -8,15 +8,23 @@ export const MyContext = createContext({
   setFiveDayData: () => {},
   loading: false,
   setLoading: () => {},
-  favorite: false,
-  setFavorie: () => {},
+  favoriteChecked: false,
+  setFavoriteChecked: () => {},
+  favoriteCity: null,
+  setFavoriteCity: () => {},
+  currentCity: null,
+  setCurrentCity: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
   const [unit, setUnit] = useState("fahrenheit");
   const [fiveDayData, setFiveDayData] = useState(null);
   const [loading, setLoading] = useState(null);
-  const [favorite, setFavorite] = useState(null);
+  const [favoriteChecked, setFavoriteChecked] = useState(null);
+  const [favoriteCity, setFavoriteCity] = useState(
+    localStorage.getItem("favorite-city")
+  );
+  const [currentCity, setCurrentCity] = useState("New York");
 
   return (
     <MyContext.Provider
@@ -27,8 +35,12 @@ export const ContextProvider = ({ children }) => {
         setFiveDayData,
         loading,
         setLoading,
-        favorite,
-        setFavorite,
+        favoriteChecked,
+        setFavoriteChecked,
+        favoriteCity,
+        setFavoriteCity,
+        currentCity,
+        setCurrentCity,
       }}
     >
       {children}

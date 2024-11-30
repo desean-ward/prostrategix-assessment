@@ -1,5 +1,5 @@
-"use client"
-import React, { useContext, useState } from "react";
+"use client";
+import React, { useContext, useEffect, useState } from "react";
 import {
   InputFormWrapper,
   InputFormContainer,
@@ -9,21 +9,26 @@ import { getFiveDayWeather } from "@/app/api/getWeather";
 import { MyContext } from "@/context/context";
 
 const InputForm = () => {
-  const [city, setCity] = useState(null);
-  const { unit, setUnit, fiveDayData, setFiveDayData, setLoading } =
-    useContext(MyContext);
+  const {
+    unit,
+    setUnit,
+    setFiveDayData,
+    setLoading,
+    currentCity,
+    setCurrentCity,
+  } = useContext(MyContext);
 
+  // Handle input change
   const handleInputChange = (e) => {
     e.preventDefault();
-    setCity(e.target.value);
+    setCurrentCity(e.target.value);
   };
 
   // Get the current weather
   const handleGetWeather = async () => {
     setLoading(true);
-    setUnit(null);
 
-    const fiveDays = await getFiveDayWeather(city);
+    const fiveDays = await getFiveDayWeather(currentCity);
 
     setTimeout(() => {
       setFiveDayData(fiveDays);
@@ -33,8 +38,11 @@ const InputForm = () => {
 
   const handleUnitChange = (e) => {
     setUnit(e.target.value);
-    localStorage.setItem("forecast-unit", e.target.value);
   };
+
+  useEffect(() => {
+    setUnit("fahrenheit");
+  }, []);
 
   return (
     <InputFormWrapper>
@@ -51,6 +59,7 @@ const InputForm = () => {
             <InputFormInput
               name='city'
               type='text'
+              value={currentCity}
               onChange={handleInputChange}
             />
 

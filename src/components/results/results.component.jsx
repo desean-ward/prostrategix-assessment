@@ -1,5 +1,7 @@
-"use client"
-import React, { useContext, useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+"use client";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { useGSAP } from "@gsap/react";
 import {
   ForecastCard,
   Result,
@@ -7,11 +9,10 @@ import {
   ResultsWrapper,
   WeatherImage,
 } from "./results.styles";
-import Image from "next/image";
 import { GridLoader } from "react-spinners";
 import { MyContext } from "@/context/context";
-import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { responseCookiesToRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 const Results = () => {
   const {
@@ -20,13 +21,18 @@ const Results = () => {
     fiveDayData,
     loading,
     setLoading,
-    setFavorite,
-    favorite,
+    favoriteChecked,
+    setFavoriteChecked,
+    favoriteCity,
+    setFavoriteCity,
+    currentCity,
+    setCurrentCity,
   } = useContext(MyContext);
 
-  // Local state for checkbox
-  const [isChecked, setIsChecked] = useState(false);
-  const favoriteCity = JSON.parse(localStorage.getItem("forecast-city"));
+  // Checks to see if the favorite city matches the current city
+  const [match, setMatch] = useState(false);
+
+  const [checked, setChecked] = useState(false);
 
   {
     /* Animations */
@@ -78,22 +84,52 @@ const Results = () => {
       return;
     }
 
-    const currentCity = fiveDayData?.location.name;
-    if (!currentCity) {
-      return null;
+    const favoriteCity = localStorage.getItem("favorite-city");
+    const currentUnit = localStorage.getItem("forecast-unit");
+    const isChecked = localStorage.getItem("favorite-checked");
+
+    if (currentCity?.toLowerCase() === favoriteCity?.toLowerCase()) {
+      setMatch(true);
+      setChecked(true);
+    } else {
+      setMatch(false);
+      setChecked(false);
     }
-
-    setUnit("fahrenheit");
-
-    if (currentCity === favoriteCity) {
-      localStorage.getItem("forecast-unit") &&
-        setUnit(localStorage.getItem("forecast-unit"));
-    }
-
-    setIsChecked(fiveDayData?.location.name === favoriteCity);
-
     setLoading(false);
   }, [fiveDayData]);
+
+  // Synchronize with localStorage on component update
+  useEffect(() => {
+    if (!favoriteChecked) {
+      return;
+    }
+
+    if (favoriteChecked) {
+      localStorage.setItem("favorite-checked", favoriteChecked);
+
+      localStorage.setItem("favorite-city", favoriteCity);
+
+      localStorage.setItem("forecast-unit", unit);
+    } else {
+      console.log("Something's wrong");
+    }
+  }, [favoriteChecked, currentCity]);
+
+  // Function to handle checkbox change
+  const handleCheckboxChange = (e) => {
+    if (e.target.checked === true) {
+      setChecked(true);
+
+      const newCurrentCity = fiveDayData.location.name;
+      setCurrentCity(newCurrentCity);
+      setFavoriteChecked(e.target.checked);
+      setFavoriteCity(newCurrentCity);
+      setUnit(unit);
+    } else {
+      setChecked(false);
+      localStorage.clear();
+    }
+  };
 
   if (loading)
     return (
@@ -107,37 +143,31 @@ const Results = () => {
       </ResultsWrapper>
     );
 
+  if (fiveDayData instanceof Error) {
+    return (
+      <ResultsWrapper>
+        <ResultsContainer>
+          <Result className={loading ? "hidden" : ""}>
+            <div className='flex items-center justify-center '>
+              <p className='text-3xl text-center text-white'>
+                No information found. <br />
+                Please verify the city name and try agian.
+              </p>
+            </div>
+          </Result>
+        </ResultsContainer>
+      </ResultsWrapper>
+    );
+  }
+
   // Edit the image URL
-  const imgUrl = fiveDayData
-    ? `https:${fiveDayData.current.condition.icon}`
-    : "";
-  if (!imgUrl) {
+  let imgUrl;
+  try {
+    imgUrl = `https:${fiveDayData.current.condition.icon}`;
+  } catch (error) {
+    console.log(error);
     return null;
   }
-
-  const currentCity = fiveDayData?.location.name;
-  if (!currentCity) {
-    return null;
-  }
-
-  const handleCheckboxChange = (e) => {
-    // Toggle checkbox state
-    const newCheckedState = e.target.checked;
-    setIsChecked(newCheckedState);
-
-    // Update localStorage
-    if (newCheckedState) {
-      setFavorite(true);
-
-      localStorage.setItem("forecast-unit", unit);
-      localStorage.setItem("forecast-city", JSON.stringify(currentCity));
-    } else {
-      setFavorite(false);
-      setUnit(null);
-      localStorage.removeItem("forecast-city");
-      localStorage.setItem("forecast-unit", "fahrenheit");
-    }
-  };
 
   return (
     <ResultsWrapper>
@@ -148,40 +178,43 @@ const Results = () => {
             id='image'
             src={imgUrl}
             alt='Image'
-            width={200}
+            width={250}
             height={200}
-            className="-mt-8"
+            className='relative -mt-32'
           />
 
           {/* Temperature */}
           {unit && unit === "fahrenheit" ? (
-            <p id='temp' className='text-3xl '>
+            <p id='temp' className='-mt-4 text-3xl'>
               {fiveDayData.current.temp_f}° F
             </p>
           ) : (
-            <p id='temp' className='text-3xl'>
+            <p id='temp' className='-mt-4 text-3xl'>
               {fiveDayData.current.temp_c}° C
             </p>
           )}
-          
+
           <p className='text-2xl'>{fiveDayData.current.condition.text}</p>
 
           {/* City Name */}
-          <p id='city'>{fiveDayData.location.name}</p>
+          <p id='city' className='text-4xl font-semibold'>
+            {fiveDayData.location.name}
+          </p>
 
           {/* Favorite Checkbox */}
           <p id='favorite' className='mb-4'>
             <input
               type='checkbox'
-              className='mr-2'
-              checked={isChecked}
+              className='mr-2 cursor-pointer'
+              //defaultChecked={match === true}
+              checked={checked ? true : false}
               onChange={handleCheckboxChange}
             />
             Save As Favorite
           </p>
 
           {/* 5 Day Forecast */}
-          <div className='relative px-4 mt-2'>
+          <div className='relative mt-2'>
             <p
               id='forcast-text'
               className='py-2 mb-8 text-xl text-center border-t border-b border-white/50'
@@ -191,33 +224,39 @@ const Results = () => {
 
             {/* 5 Day Forecast Cards */}
             <div className='flex flex-col justify-between gap-4 mb-12 md:flex-row'>
-              {fiveDayData && fiveDayData.forecast.forecastday
-                ? fiveDayData.forecast.forecastday.map((day, index) => (
-                    <ForecastCard key={index} className="text-center">
+              {fiveDayData && fiveDayData.forecast.forecastday ? (
+                fiveDayData.forecast.forecastday.map((day, index) => (
+                  <ForecastCard key={index} className='text-center'>
                     {/* Date */}
-                      <p className="mb-2 text-sm font-semibold border-b">{new Date(day.date).toDateString().slice(0, 10)}</p>
-                                    
-                      {/* Temperature */}
-                      {unit && unit === "fahrenheit" ? (
-                        <p>{day.day.mintemp_f}° / {day.day.maxtemp_f}°</p>
-                      ) : (
-                        <p>{day.day.avgtemp_c}° C</p>
-                      )}
-                      
-                      {/* Weather Image */}
-                      <WeatherImage
-                        src={`https:${day.day.condition.icon}`}
-                        alt='Image'
-                        width={50}
-                        height={50}
-                        className="mx-auto mb-4 -mt-4"
-                      />
-                      
-                      {/* Condition */}
-                      <p className="line-clamp-1">{day.day.condition.text}</p>
-                    </ForecastCard>
-                  ))
-                : "No forecast data available."}
+                    <p className='mb-2 text-sm font-semibold border-b'>
+                      {new Date(day.date).toDateString().slice(0, 10)}
+                    </p>
+
+                    {/* Temperature */}
+                    {unit && unit === "fahrenheit" ? (
+                      <p>
+                        {day.day.mintemp_f}° / {day.day.maxtemp_f}°
+                      </p>
+                    ) : (
+                      <p>{day.day.avgtemp_c}° C</p>
+                    )}
+
+                    {/* Weather Image */}
+                    <WeatherImage
+                      src={`https:${day.day.condition.icon}`}
+                      alt='Image'
+                      width={50}
+                      height={50}
+                      className='mx-auto mb-4 -mt-4'
+                    />
+
+                    {/* Condition */}
+                    <p className='line-clamp-1'>{day.day.condition.text}</p>
+                  </ForecastCard>
+                ))
+              ) : (
+                <div>No data found.</div>
+              )}
             </div>
           </div>
         </Result>

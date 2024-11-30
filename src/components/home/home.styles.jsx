@@ -17,7 +17,7 @@ export const HomeContainer = tw.div`
     top-40
     px-4
     md:px-12
-    lg:px-56   
+    lg:px-48   
 
     lg:grid 
     grid-cols-2 
