@@ -66,13 +66,16 @@ const InputForm = () => {
         >
           {/* Title */}
           <div className='flex flex-col gap-4 rounded-lg '>
-            <p id='title' className='py-4 mb-8 text-4xl font-semibold tracking-wider shadow-lg shadow-black'>
-              Anytime
+            <p
+              id='title'
+              className='flex flex-wrap justify-center gap-2 py-4 mb-8 text-4xl font-semibold tracking-wider shadow-lg shadow-black'
+            >
+              <span className="text-center">Anytime</span>
               <span className='bg-gradient-to-r from-[#272781] via-[#F0A606] to-[#272781] text-transparent bg-clip-text'>
                 Weather
               </span>
             </p>
-            <p className="text-start">Enter city below</p>
+            <p className='text-start'>Enter city below</p>
 
             {/* Input field */}
             <InputFormInput
@@ -112,7 +115,9 @@ const InputForm = () => {
           </div>
 
           {/* Submit button */}
-          <AnimatedButton type='submit' className="shadow-xl shadow-black">Enter</AnimatedButton>
+          <AnimatedButton type='submit' className='shadow-xl shadow-black'>
+            Enter
+          </AnimatedButton>
         </form>
       </InputFormContainer>
     </InputFormWrapper>
