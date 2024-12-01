@@ -45,7 +45,7 @@ The application is built upon Next.js, TailwindCSS, Tailwind Styled Components, 
 <img src="https://github.com/deseanward/PS-Capstone/assets/139034534/2e5d8e8e-732b-474e-8ded-2200b880ad4e" width="80" alt="" /> &nbsp;
 <img src="https://github.com/desean-ward/dw-estates/assets/66344466/9f77fd16-55ff-4d67-8d39-546c129fc018" width="80" alt="" /> &nbsp;
 <img src="https://github.com/user-attachments/assets/b2cf86de-e648-49c9-9a61-c44946cee58a" width="140" alt="" /> &nbsp;
-<img src="https://github.com/user-attachments/assets/a414629b-e2e6-4ec4-86aa-2e40ea62e5be" width="140" alt="" /> &nbsp;
+<img src="https://github.com/user-attachments/assets/a414629b-e2e6-4ec4-86aa-2e40ea62e5be" width="160" alt="" /> &nbsp;
 
 ## Roadmap
 
