@@ -2,7 +2,6 @@ import tw from "tailwind-styled-components";
 
 export const HomeWrapper = tw.div`
     w-full 
-    h-screen
 `;
 
 export const HomeContainer = tw.div`
@@ -11,13 +10,14 @@ export const HomeContainer = tw.div`
     lg:flex-row
     justy-center 
     items-center
-    w-full
+    size-full
     lg:h-fit
     absolute 
-    top-40
+    py-4 
     px-4
-    md:px-12
+    md:p-8
     lg:px-48   
+    gap-4
 
     lg:grid 
     grid-cols-2 

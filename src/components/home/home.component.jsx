@@ -1,52 +1,50 @@
 "use client";
-import React, { useContext, useEffect } from "react";
-import { MyContext } from "@/context/context";
+import { useEffect } from "react";
 import InputForm from "../input-form/input-form.component";
 import Results from "../results/results.component";
 import { getFiveDayWeather } from "@/app/api/getWeather";
 import { HomeContainer, HomeWrapper } from "./home.styles";
+import useWeatherStore from "@/app/stores/weather-store";
 
 const Home = () => {
-  // Get context values
   const {
-    setUnit,
     setFiveDayData,
     setLoading,
-    setFavoriteChecked,
     currentCity,
+    favoriteCity,
     setCurrentCity,
-    setFavoriteCity,
-  } = useContext(MyContext);
+  } = useWeatherStore();
 
   useEffect(() => {
     const handleGetWeather = async () => {
-      // Set loading to true
       setLoading(true);
 
-      // Check local storage for favorite checked state
-      const favoriteChecked = localStorage.getItem("favorite-checked");
-      if (favoriteChecked) setFavoriteChecked(favoriteChecked);
+      try {
+        const state = useWeatherStore.getState();
+        const { favoriteCity, currentCity } = state;
 
-      // Check local storage for favorite city
-      const favoriteCity = localStorage.getItem("favorite-city");
-      if (favoriteCity) setFavoriteCity(favoriteCity);
+        const location = favoriteCity || currentCity || "New York";
+        setCurrentCity(location);
 
-      // Get 5 day forecast
-      const fiveDays = await getFiveDayWeather(favoriteCity || currentCity);
-      setFiveDayData(fiveDays);
-
-      // Check local storage for favorite city
-      setCurrentCity(favoriteCity || currentCity);
-
-      // Check local storage for favorite forecast unit
-      const unit = localStorage.getItem("forecast-unit") || "fahrenheit";
-      setUnit(unit);
-
-      setLoading(false);
+        const fiveDays = await getFiveDayWeather(location);
+        setFiveDayData(fiveDays);
+      } catch (error) {
+        console.error("Error fetching weather data:", error);
+        setFiveDayData(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
     handleGetWeather();
-  }, []);
+  }, [setFiveDayData, setLoading, setCurrentCity]);
+
+  // Check for Hydration
+  const isHydrated = useWeatherStore.persist.hasHydrated();
+
+  if (!isHydrated) {
+    return null; // Avoid rendering until hydration is complete
+  }
 
   return (
     <HomeWrapper>

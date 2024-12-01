@@ -1,12 +1,12 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import useWeatherStore from "@/app/stores/weather-store";
 import {
   InputFormWrapper,
   InputFormContainer,
   InputFormInput,
 } from "./input-form.styles";
 import { getFiveDayWeather } from "@/app/api/getWeather";
-import { MyContext } from "@/context/context";
 
 const InputForm = () => {
   const {
@@ -15,8 +15,16 @@ const InputForm = () => {
     setFiveDayData,
     setLoading,
     currentCity,
+    favoriteCity,
     setCurrentCity,
-  } = useContext(MyContext);
+  } = useWeatherStore();
+
+  // Check for Hydration
+  const isHydrated = useWeatherStore.persist.hasHydrated();
+
+  if (!isHydrated) {
+    return null; // Avoid rendering until hydration is complete
+  }
 
   // Handle input change
   const handleInputChange = (e) => {
@@ -30,36 +38,30 @@ const InputForm = () => {
 
     const fiveDays = await getFiveDayWeather(currentCity);
 
-    setTimeout(() => {
-      setFiveDayData(fiveDays);
-      setLoading(false);
-    }, 1000);
+    setFiveDayData(fiveDays);
+    setLoading(false);
   };
 
   const handleUnitChange = (e) => {
     setUnit(e.target.value);
   };
 
-  useEffect(() => {
-    setUnit("fahrenheit");
-  }, []);
-
   return (
     <InputFormWrapper>
       <InputFormContainer>
         <form
           action={handleGetWeather}
-          className='flex flex-col w-full gap-8 px-12 -mt-4'
+          className='flex flex-col justify-center w-full gap-8 px-4 size-full'
         >
-          <div className='flex flex-col gap-4 px-4 py-12 rounded-lg '>
-            <p className='text-3xl font-semibold'>Anytime Weather</p>
+          {/* Title */}
+          <div className='flex flex-col gap-4 rounded-lg '>
+            <p className='mb-8 text-3xl font-semibold text-center'>Anytime Weather</p>
             <p>Enter city below</p>
 
             {/* Input field */}
             <InputFormInput
               name='city'
               type='text'
-              value={currentCity}
               onChange={handleInputChange}
             />
 

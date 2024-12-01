@@ -1,7 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { useGSAP } from "@gsap/react";
+
+import React, { useEffect } from "react";
+import { GridLoader } from "react-spinners";
+import gsap from "gsap";
 import {
   ForecastCard,
   Result,
@@ -9,44 +10,44 @@ import {
   ResultsWrapper,
   WeatherImage,
 } from "./results.styles";
-import { GridLoader } from "react-spinners";
-import { MyContext } from "@/context/context";
-import gsap from "gsap";
-import { responseCookiesToRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import useWeatherStore from "@/app/stores/weather-store";
 
 const Results = () => {
   const {
-    unit,
-    setUnit,
     fiveDayData,
     loading,
-    setLoading,
     favoriteChecked,
     setFavoriteChecked,
     favoriteCity,
     setFavoriteCity,
     currentCity,
     setCurrentCity,
-  } = useContext(MyContext);
+    checked,
+    setChecked,
+    unit,
+    setUnit,
+  } = useWeatherStore();
 
-  // Checks to see if the favorite city matches the current city
-  const [match, setMatch] = useState(false);
+  /**
+   * Synchronize 'checked' state with the favorite city
+   */
+  useEffect(() => {
+    if (currentCity && favoriteCity) {
+      setChecked(currentCity.toLowerCase() === favoriteCity.toLowerCase());
+    } else {
+      setChecked(false);
+    }
+  }, [currentCity, favoriteCity, setChecked]);
 
-  const [checked, setChecked] = useState(false);
+  /**
+   * GSAP animations.
+   */
+  useEffect(() => {
+    if (loading || !fiveDayData) return;
 
-  {
-    /* Animations */
-  }
-  useGSAP(() => {
-    gsap
-      .timeline()
-      .from("#image", {
-        duration: 1,
-        y: -100,
-        opacity: 0,
-        ease: "elastic",
-      })
-
+    const timeline = gsap.timeline();
+    timeline
+      .from("#image", { duration: 1, y: -100, opacity: 0, ease: "elastic" })
       .from("#temp", {
         x: -100,
         opacity: 0,
@@ -54,7 +55,6 @@ const Results = () => {
         duration: 0.5,
         delay: -1,
       })
-
       .from("#city", {
         delay: -1.3,
         duration: 1,
@@ -68,7 +68,6 @@ const Results = () => {
         opacity: 0,
         ease: "easeIn",
       })
-
       .from(".forecast", {
         duration: 0.5,
         scale: 0,
@@ -76,82 +75,65 @@ const Results = () => {
         ease: "back",
         stagger: 0.1,
       });
-  }, [loading]);
 
-  // Synchronize with localStorage on component mount
-  useEffect(() => {
-    if (!fiveDayData) {
-      return;
-    }
+    return () => {
+      timeline.kill();
+    };
+  }, [loading, fiveDayData]);
 
-    const favoriteCity = localStorage.getItem("favorite-city");
-    const currentUnit = localStorage.getItem("forecast-unit");
-    const isChecked = localStorage.getItem("favorite-checked");
+  // Check for Hydration
+  const isHydrated = useWeatherStore.persist.hasHydrated();
 
-    if (currentCity?.toLowerCase() === favoriteCity?.toLowerCase()) {
-      setMatch(true);
-      setChecked(true);
-    } else {
-      setMatch(false);
-      setChecked(false);
-    }
-    setLoading(false);
-  }, [fiveDayData]);
+  if (!isHydrated) {
+    return null; // Avoid rendering until hydration is complete
+  }
 
-  // Synchronize with localStorage on component update
-  useEffect(() => {
-    if (!favoriteChecked) {
-      return;
-    }
-
-    if (favoriteChecked) {
-      localStorage.setItem("favorite-checked", favoriteChecked);
-
-      localStorage.setItem("favorite-city", favoriteCity);
-
-      localStorage.setItem("forecast-unit", unit);
-    } else {
-      console.log("Something's wrong");
-    }
-  }, [favoriteChecked, currentCity]);
-
-  // Function to handle checkbox change
+  /**
+   * Handle checkbox state changes.
+   */
   const handleCheckboxChange = (e) => {
-    if (e.target.checked === true) {
-      setChecked(true);
+    const isChecked = e.target.checked;
 
-      const newCurrentCity = fiveDayData.location.name;
+    setChecked(isChecked);
+    setFavoriteChecked(isChecked);
+
+    if (isChecked) {
+      const newCurrentCity = fiveDayData?.location?.name || "";
       setCurrentCity(newCurrentCity);
-      setFavoriteChecked(e.target.checked);
       setFavoriteCity(newCurrentCity);
-      setUnit(unit);
     } else {
-      setChecked(false);
-      localStorage.clear();
+      setCurrentCity("");
+      setFavoriteCity("");
     }
   };
 
-  if (loading)
+  /**
+   * Render Spinner while loading.
+   */
+  if (loading || !fiveDayData) {
     return (
       <ResultsWrapper>
         <ResultsContainer className='border-none'>
-          {/* Loading Spinner */}
-          <div className='flex items-center justify-center '>
+          <div className='flex items-center justify-center'>
             <GridLoader color='white' />
           </div>
         </ResultsContainer>
       </ResultsWrapper>
     );
+  }
 
+  /**
+   * Render Error if error occurs while retrieving data.
+   */
   if (fiveDayData instanceof Error) {
     return (
       <ResultsWrapper>
         <ResultsContainer>
-          <Result className={loading ? "hidden" : ""}>
-            <div className='flex items-center justify-center '>
+          <Result>
+            <div className='flex items-center justify-center'>
               <p className='text-3xl text-center text-white'>
                 No information found. <br />
-                Please verify the city name and try agian.
+                Please verify the city name and try again.
               </p>
             </div>
           </Result>
@@ -160,64 +142,45 @@ const Results = () => {
     );
   }
 
-  // Edit the image URL
-  let imgUrl;
-  try {
-    imgUrl = `https:${fiveDayData.current.condition.icon}`;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
+  // Concatenate the image URL
+  const imgUrl = `https:${fiveDayData.current.condition.icon}`;
 
   return (
     <ResultsWrapper>
       <ResultsContainer>
-        <Result className={loading ? "hidden" : ""}>
-          {/* Weather Image */}
+        <Result>
           <WeatherImage
             id='image'
             src={imgUrl}
-            alt='Image'
+            alt='Weather'
             width={250}
             height={200}
-            className='relative -mt-32'
+            className='absolute -mt-32'
           />
-
-          {/* Temperature */}
-          {unit && unit === "fahrenheit" ? (
-            <p id='temp' className='-mt-4 text-3xl'>
-              {fiveDayData.current.temp_f}° F
-            </p>
-          ) : (
-            <p id='temp' className='-mt-4 text-3xl'>
-              {fiveDayData.current.temp_c}° C
-            </p>
-          )}
-
+          <p id='temp' className='text-3xl mt-[7.5rem]'>
+            {unit === "fahrenheit"
+              ? `${fiveDayData.current.temp_f}° F`
+              : `${fiveDayData.current.temp_c}° C`}
+          </p>
           <p className='text-2xl'>{fiveDayData.current.condition.text}</p>
-
-          {/* City Name */}
           <p id='city' className='text-4xl font-semibold'>
             {fiveDayData.location.name}
           </p>
-
-          {/* Favorite Checkbox */}
           <p id='favorite' className='mb-4'>
             <input
               type='checkbox'
               className='mr-2 cursor-pointer'
-              //defaultChecked={match === true}
-              checked={checked ? true : false}
+              checked={checked}
               onChange={handleCheckboxChange}
             />
             Save As Favorite
           </p>
 
           {/* 5 Day Forecast */}
-          <div className='relative mt-2'>
+          <div className='relative w-full mt-2'>
             <p
               id='forcast-text'
-              className='py-2 mb-8 text-xl text-center border-t border-b border-white/50'
+              className='w-full py-2 mb-4 text-xl text-center border-t border-b border-white/50'
             >
               5 Day Forecast
             </p>
@@ -247,11 +210,11 @@ const Results = () => {
                       alt='Image'
                       width={50}
                       height={50}
-                      className='mx-auto mb-4 -mt-4'
+                      className='mx-auto -mt-4'
                     />
 
                     {/* Condition */}
-                    <p className='line-clamp-1'>{day.day.condition.text}</p>
+                    <p className='-mt-4 line-clamp-1'>{day.day.condition.text}</p>
                   </ForecastCard>
                 ))
               ) : (
