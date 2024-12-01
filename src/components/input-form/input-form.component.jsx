@@ -19,13 +19,6 @@ const InputForm = () => {
     setCurrentCity,
   } = useWeatherStore();
 
-  // Check for Hydration
-  const isHydrated = useWeatherStore.persist.hasHydrated();
-
-  if (!isHydrated) {
-    return null; // Avoid rendering until hydration is complete
-  }
-
   // Handle input change
   const handleInputChange = (e) => {
     e.preventDefault();

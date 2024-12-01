@@ -39,13 +39,6 @@ const Home = () => {
     handleGetWeather();
   }, [setFiveDayData, setLoading, setCurrentCity]);
 
-  // Check for Hydration
-  const isHydrated = useWeatherStore.persist.hasHydrated();
-
-  if (!isHydrated) {
-    return null; // Avoid rendering until hydration is complete
-  }
-
   return (
     <HomeWrapper>
       <HomeContainer>

@@ -81,13 +81,6 @@ const Results = () => {
     };
   }, [loading, fiveDayData]);
 
-  // Check for Hydration
-  const isHydrated = useWeatherStore.persist.hasHydrated();
-
-  if (!isHydrated) {
-    return null; // Avoid rendering until hydration is complete
-  }
-
   /**
    * Handle checkbox state changes.
    */
