@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { GridLoader } from "react-spinners";
 import gsap from "gsap";
 import {
@@ -11,12 +10,16 @@ import {
   WeatherImage,
 } from "./results.styles";
 import useWeatherStore from "@/app/stores/weather-store";
+import { useGSAP } from "@gsap/react";
+import { useHydration } from "@/app/stores/hydration-store";
 
 const Results = () => {
+  // Track hydration status
+  const hydrated = useHydration();
+
   const {
     fiveDayData,
     loading,
-    favoriteChecked,
     setFavoriteChecked,
     favoriteCity,
     setFavoriteCity,
@@ -25,12 +28,12 @@ const Results = () => {
     checked,
     setChecked,
     unit,
-    setUnit,
   } = useWeatherStore();
 
-  /**
-   * Synchronize 'checked' state with the favorite city
-   */
+  // Track if the page has initially loaded
+  const [pageLoaded, setPageLoaded] = useState(false);
+
+  // Synchronize 'checked' state with the favorite city
   useEffect(() => {
     if (currentCity && favoriteCity) {
       setChecked(currentCity.toLowerCase() === favoriteCity.toLowerCase());
@@ -39,15 +42,56 @@ const Results = () => {
     }
   }, [currentCity, favoriteCity, setChecked]);
 
+  // GSAP Animation for Spinner
+  useGSAP(() => {
+    if (!hydrated || pageLoaded || !loading) return;
+
+    const spinner = document.querySelector("#spinner");
+
+    if (!spinner) {
+      console.error("Spinner element not found");
+      return;
+    }
+
+    // Set initial position for spinner
+    gsap.set(spinner, { x: "100%", opacity: 0 });
+
+    // Animate spinner sliding in
+    const spinnerTimeline = gsap.timeline();
+    spinnerTimeline.to(spinner, {
+      x: "0%",
+      opacity: 1,
+      duration: 0.5,
+      ease: "easeIn",
+    });
+
+    // Mark the page as fully loaded after spinner animation
+    spinnerTimeline.eventCallback("onComplete", () => {
+      setPageLoaded(true);
+    });
+
+    // Clean up on completion
+    return () => {
+      spinnerTimeline.kill();
+    };
+  }, [hydrated, loading, hydrated]);
+
   /**
-   * GSAP animations.
+   * Results animations.
    */
-  useEffect(() => {
-    if (loading || !fiveDayData) return;
+  useGSAP(() => {
+    // Ensure GSAP only runs after hydration and loading
+    if (loading || !fiveDayData || !hydrated) return;
 
     const timeline = gsap.timeline();
+
     timeline
-      .from("#image", { duration: 1, y: -100, opacity: 0, ease: "elastic" })
+      .from("#image", {
+        duration: 1,
+        y: -100,
+        opacity: 0,
+        ease: "elastic",
+      })
       .from("#temp", {
         x: -100,
         opacity: 0,
@@ -76,14 +120,16 @@ const Results = () => {
         stagger: 0.1,
       });
 
+    // Clean up on completion
     return () => {
       timeline.kill();
     };
-  }, [loading, fiveDayData]);
+  }, [loading, fiveDayData, hydrated]);
 
-  /**
-   * Handle checkbox state changes.
-   */
+  // Prevent rendering until hydration is complete
+  if (!hydrated) return null;
+
+  // Handle checkbox state changes.
   const handleCheckboxChange = (e) => {
     const isChecked = e.target.checked;
 
@@ -105,7 +151,7 @@ const Results = () => {
    */
   if (loading || !fiveDayData) {
     return (
-      <ResultsWrapper>
+      <ResultsWrapper id='spinner'>
         <ResultsContainer className='border-none'>
           <div className='flex items-center justify-center'>
             <GridLoader color='white' />
@@ -120,10 +166,10 @@ const Results = () => {
    */
   if (fiveDayData instanceof Error) {
     return (
-      <ResultsWrapper>
+      <ResultsWrapper id='error'>
         <ResultsContainer>
           <Result>
-            <div className='flex items-center justify-center'>
+            <div className='relative flex items-center justify-center -translate-y-1/2 top-1/2'>
               <p className='text-3xl text-center text-white'>
                 No information found. <br />
                 Please verify the city name and try again.
@@ -139,24 +185,24 @@ const Results = () => {
   const imgUrl = `https:${fiveDayData.current.condition.icon}`;
 
   return (
-    <ResultsWrapper>
+    <ResultsWrapper id='results'>
       <ResultsContainer>
-        <Result>
+        <Result id='result'>
           <WeatherImage
             id='image'
             src={imgUrl}
             alt='Weather'
             width={250}
             height={200}
-            className='absolute -mt-32'
+            className='absolute -mt-24 rounded-lg shadow-lg lg:-mt-36 shadow-black backdrop-blur-lg'
           />
-          <p id='temp' className='text-3xl mt-[7.5rem]'>
+          <p id='temp' className='text-3xl mt-[7.5rem] lg:mt-[80px]'>
             {unit === "fahrenheit"
               ? `${fiveDayData.current.temp_f}° F`
               : `${fiveDayData.current.temp_c}° C`}
           </p>
           <p className='text-2xl'>{fiveDayData.current.condition.text}</p>
-          <p id='city' className='text-4xl font-semibold'>
+          <p id='city' className='text-5xl font-semibold text-[#F0A606]'>
             {fiveDayData.location.name}
           </p>
           <p id='favorite' className='mb-4'>
@@ -207,7 +253,9 @@ const Results = () => {
                     />
 
                     {/* Condition */}
-                    <p className='-mt-4 line-clamp-1'>{day.day.condition.text}</p>
+                    <p className='-mt-4 line-clamp-1'>
+                      {day.day.condition.text}
+                    </p>
                   </ForecastCard>
                 ))
               ) : (

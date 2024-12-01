@@ -15,6 +15,7 @@ export const HomeContainer = tw.div`
     absolute 
     py-4 
     px-4
+    bb-8
     md:p-8
     lg:px-48   
     gap-4

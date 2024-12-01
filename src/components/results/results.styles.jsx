@@ -3,7 +3,6 @@ import tw from "tailwind-styled-components";
 
 export const ResultsWrapper = tw.section`
     w-full 
-    
     md:size-full
     lg:max-h-[592px]
     border 
@@ -15,15 +14,19 @@ export const ResultsWrapper = tw.section`
     justify-center
     items-center
     p-5 
-    pb-8
+    pb-8 
+    translate-x-[100%] 
+    opacity-0 
+    transition-none
 `;
 
 export const ResultsContainer = tw.div`
+    card
     flex 
     flex-col 
     md:flex-row
     justify-center
-    size-fit
+    size-full
     lg:size-full
     bg-gradient-to-b from-black to-slate-800
     shadow-2xl
@@ -43,18 +46,21 @@ export const Result = tw.div`
 
 export const WeatherImage = tw(Image)`
     relative 
-    
 `;
 
 export const ForecastCard = tw.div`
-    forecast 
-    w-full 
-    
+    relative 
     flex 
     flex-col 
+    w-full 
     gap-2 
+    p-2
     border 
-    rounded-lg 
-    p-2 
-    align-center
+    border-[#F0A606]
+    rounded-lg  
+    h-fit 
+    forecast 
+    align-center 
+    shadow-lg 
+    shadow-black
 `;

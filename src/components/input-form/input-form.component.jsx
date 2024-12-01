@@ -1,5 +1,4 @@
 "use client";
-import React, { useEffect } from "react";
 import useWeatherStore from "@/app/stores/weather-store";
 import {
   InputFormWrapper,
@@ -7,6 +6,9 @@ import {
   InputFormInput,
 } from "./input-form.styles";
 import { getFiveDayWeather } from "@/app/api/getWeather";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import AnimatedButton from "@/app/ui/animated-button/animated-button.ui";
 
 const InputForm = () => {
   const {
@@ -15,7 +17,6 @@ const InputForm = () => {
     setFiveDayData,
     setLoading,
     currentCity,
-    favoriteCity,
     setCurrentCity,
   } = useWeatherStore();
 
@@ -39,8 +40,25 @@ const InputForm = () => {
     setUnit(e.target.value);
   };
 
+  useGSAP(() => {
+    const timeline = gsap.timeline();
+    timeline
+      .from(["#form-input"], {
+        x: "-100%",
+        opacity: 0,
+        duration: 0.5,
+        ease: "easeIn",
+      })
+      .from(["#title"], {
+        opacity: 0,
+        duration: 0.5,
+        ease: "easeIn",
+        delay: 2,
+      });
+  }, []);
+
   return (
-    <InputFormWrapper>
+    <InputFormWrapper id='form-input'>
       <InputFormContainer>
         <form
           action={handleGetWeather}
@@ -48,8 +66,13 @@ const InputForm = () => {
         >
           {/* Title */}
           <div className='flex flex-col gap-4 rounded-lg '>
-            <p className='mb-8 text-3xl font-semibold text-center'>Anytime Weather</p>
-            <p>Enter city below</p>
+            <p id='title' className='py-4 mb-8 text-4xl font-semibold tracking-wider shadow-lg shadow-black'>
+              Anytime
+              <span className='bg-gradient-to-r from-[#272781] via-[#F0A606] to-[#272781] text-transparent bg-clip-text'>
+                Weather
+              </span>
+            </p>
+            <p className="text-start">Enter city below</p>
 
             {/* Input field */}
             <InputFormInput
@@ -89,12 +112,7 @@ const InputForm = () => {
           </div>
 
           {/* Submit button */}
-          <button
-            type='submit'
-            className='w-full p-2 text-2xl font-bold text-black duration-300 ease-in-out bg-white border border-black rounded-lg hover:text-white hover:bg-gradient-to-r from-black to-slate-800 trasition-colors hover:border-white/50 hover:dhadow-black hover:shadow-2xl'
-          >
-            Enter
-          </button>
+          <AnimatedButton type='submit' className="shadow-xl shadow-black">Enter</AnimatedButton>
         </form>
       </InputFormContainer>
     </InputFormWrapper>
