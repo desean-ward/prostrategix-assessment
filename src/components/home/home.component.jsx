@@ -11,7 +11,9 @@ import gsap from "gsap";
 const Home = () => {
   const { setFiveDayData, setLoading, setCurrentCity } = useWeatherStore();
 
-  const [sValue, setSValue] = useState("");
+  const [sValue, setSValue] = useState(
+    typeof window !== "undefined" && window.innerWidth >= 810 ? "-5" : ""
+  );
 
   useEffect(() => {
     // Dynamically fetch window size
@@ -22,7 +24,7 @@ const Home = () => {
 
     // Run the resize logic on initial mount
     handleResize();
-    
+
     // Add resize listener
     window.addEventListener("resize", handleResize);
 
