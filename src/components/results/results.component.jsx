@@ -194,7 +194,7 @@ const Results = () => {
             alt='Weather'
             width={250}
             height={200}
-            className='absolute -mt-24 rounded-lg shadow-2xl lg:-mt-36 shadow-black backdrop-blur-lg'
+            className='absolute pb-4 -mt-24 rounded-lg shadow-2xl lg:-mt-36 shadow-black backdrop-blur-lg'
           />
           <p id='temp' className='text-3xl mt-[7.5rem] lg:mt-[80px]'>
             {unit === "fahrenheit"
