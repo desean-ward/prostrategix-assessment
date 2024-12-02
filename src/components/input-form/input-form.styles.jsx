@@ -1,4 +1,4 @@
-import AnimatedButton from "@/app/ui/animated-button/animated-button.ui";
+import AnimatedButton from "@/components/ui/animated-button/animated-button.ui";
 import tw from "tailwind-styled-components";
 
 export const InputFormWrapper = tw.section`
@@ -17,6 +17,7 @@ export const InputFormWrapper = tw.section`
     mt-36
     md:mt-16
     lg:mt-0
+    z-16
 `;
 
 export const InputFormContainer = tw.div`
@@ -33,6 +34,7 @@ export const InputFormContainer = tw.div`
     shadow-black
     md:px-12 
     rounded-lg
+    fixed
 `;
 
 export const InputFormInput = tw.input`
@@ -42,8 +44,10 @@ export const InputFormInput = tw.input`
     border-black
     rounded-lg
     text-black
+    relative 
+    z-20
 `;
 
 export const SubmitButton = tw(AnimatedButton)`
 
-`
+`;

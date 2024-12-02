@@ -27,7 +27,8 @@
 
 ## About The Project
 
-![anytime-weather](https://github.com/user-attachments/assets/76e0fa4d-6b86-46f2-bca4-ec1cd5c9fd0b)
+![anytime-weather](https://github.com/user-attachments/assets/caf47e1c-65cb-481c-a49d-8ac6d0e5d2cf)
+
 
 
 This applicaton was built as part of an interview and assessment process for a Web Developer role @Prostrategix.

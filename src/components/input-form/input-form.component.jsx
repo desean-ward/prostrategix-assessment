@@ -8,7 +8,7 @@ import {
 import { getFiveDayWeather } from "@/app/api/getWeather";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import AnimatedButton from "@/app/ui/animated-button/animated-button.ui";
+import AnimatedButton from "@/components/ui/animated-button/animated-button.ui";
 
 const InputForm = () => {
   const {
@@ -70,7 +70,7 @@ const InputForm = () => {
               id='title'
               className='flex flex-wrap justify-center gap-2 py-4 mb-8 text-4xl font-semibold tracking-wider shadow-lg shadow-black'
             >
-              <span className="text-center">Anytime</span>
+              <span className='text-center'>Anytime</span>
               <span className='bg-gradient-to-r from-[#272781] via-[#F0A606] to-[#272781] text-transparent bg-clip-text'>
                 Weather
               </span>
@@ -115,9 +115,7 @@ const InputForm = () => {
           </div>
 
           {/* Submit button */}
-          <AnimatedButton type='submit' className='shadow-xl shadow-black'>
-            Enter
-          </AnimatedButton>
+          <AnimatedButton type='submit'>Enter</AnimatedButton>
         </form>
       </InputFormContainer>
     </InputFormWrapper>

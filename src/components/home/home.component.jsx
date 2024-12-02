@@ -7,6 +7,7 @@ import { HomeContainer, HomeWrapper } from "./home.styles";
 import useWeatherStore from "@/app/stores/weather-store";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import WeatherPerson from "../weather-person/weather-person.component";
 
 const Home = () => {
   const { setFiveDayData, setLoading, setCurrentCity } = useWeatherStore();
@@ -108,6 +109,7 @@ const Home = () => {
         </div>
       </header>
       <HomeContainer>
+        <WeatherPerson />
         <InputForm />
         <Results />
       </HomeContainer>
