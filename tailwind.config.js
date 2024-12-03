@@ -7,13 +7,28 @@ module.exports = {
   ],
   theme: {
     extend: {
+      /** @type {import('tailwindcss').Config} */
+      
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        black: {
+          DEFAULT: "#000",
+          100: "#000319",
+          200: "rgba(17, 25, 40, 0.75)",
+          300: "rgba(255, 255, 255, 0.125)",
+        },
+        white: {
+          DEFAULT: "#FFF",
+          100: "#BEC1DD",
+          200: "#C1C2D3",
+        },
+        
       },
+      backgroundImage: {
+        'bg-image': "url('/imgages/spotlight-bg.jpg')",
+        'footer-texture': "url('/img/footer-texture.png')",
+      }
     },
+
+    plugins: [require("tailwindcss-text-border")],
   },
-  plugins: [
-    require('tailwindcss-text-border'),
-  ],
 };

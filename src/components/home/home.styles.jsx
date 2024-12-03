@@ -4,6 +4,8 @@ export const HomeWrapper = tw.div`
     w-full 
     h-full
     min-h-screen
+    bg-gradient-to-b from-black from-50%  to-slate-900
+    overflow-hidden
 `;
 
 export const HomeContainer = tw.div`

@@ -2,8 +2,8 @@ import tw from "tailwind-styled-components";
 
 export const IconTrail = tw.div`
   absolute 
-  w-16 
-  h-16
+  w-12 
+  h-12
   bg-transparent 
   transform 
   transition-transform 

@@ -51,9 +51,13 @@ const InputForm = () => {
       })
       .from(["#title"], {
         opacity: 0,
-        duration: 0.5,
+        duration: 0.2,
         ease: "easeIn",
-        delay: 2,
+      })
+      .from(["#input"], {
+        opacity: 0,
+        duration: 0.2,
+        ease: "easeIn",
       });
   }, []);
 
@@ -75,47 +79,51 @@ const InputForm = () => {
                 Weather
               </span>
             </p>
-            <p className='text-start'>Enter city below</p>
 
-            {/* Input field */}
-            <InputFormInput
-              name='city'
-              type='text'
-              onChange={handleInputChange}
-            />
+            <div id='input' className='flex flex-col gap-4'>
+              <p className='text-start'>Enter city below</p>
 
-            {/* Radio Buttons */}
-            <div className='flex gap-8'>
-              <span className='flex gap-2 text-2xl'>
-                <input
-                  type='radio'
-                  id='fahrenheit'
-                  name='temperature'
-                  value='fahrenheit'
-                  checked={unit === "fahrenheit"}
-                  className='cursor-pointer'
-                  onChange={handleUnitChange}
-                />{" "}
-                F
-              </span>
+              {/* Input field */}
 
-              <span className='flex gap-2 text-2xl'>
-                <input
-                  type='radio'
-                  id='celcius'
-                  name='temperature'
-                  value='celcius'
-                  checked={unit === "celcius"}
-                  className='cursor-pointer hover:bg-gradient-to-r g-gradient-to-b hovefrom-black to-slate-800'
-                  onChange={handleUnitChange}
-                />{" "}
-                C
-              </span>
+              <InputFormInput
+                name='city'
+                type='text'
+                onChange={handleInputChange}
+              />
+
+              {/* Radio Buttons */}
+              <div className='flex gap-8'>
+                <span className='flex gap-2 text-2xl'>
+                  <input
+                    type='radio'
+                    id='fahrenheit'
+                    name='temperature'
+                    value='fahrenheit'
+                    checked={unit === "fahrenheit"}
+                    className='cursor-pointer'
+                    onChange={handleUnitChange}
+                  />{" "}
+                  F
+                </span>
+
+                <span className='flex gap-2 text-2xl'>
+                  <input
+                    type='radio'
+                    id='celcius'
+                    name='temperature'
+                    value='celcius'
+                    checked={unit === "celcius"}
+                    className='cursor-pointer hover:bg-gradient-to-r g-gradient-to-b hovefrom-black to-slate-800'
+                    onChange={handleUnitChange}
+                  />{" "}
+                  C
+                </span>
+              </div>
             </div>
           </div>
 
           {/* Submit button */}
-          <AnimatedButton type='submit'>Enter</AnimatedButton>
+            <AnimatedButton type='submit'>Enter</AnimatedButton>
         </form>
       </InputFormContainer>
     </InputFormWrapper>

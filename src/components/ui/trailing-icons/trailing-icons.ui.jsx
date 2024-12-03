@@ -37,7 +37,7 @@ const TrailingIcons = ({ icon }) => {
             setTrail([]); // Clear the trail completely
             return 0;
           }
-          return prev - 0.15; // Decrease opacity gradually
+          return prev - 0.175; // Decrease opacity gradually
         });
       }, 50); // Fade step every 50ms
     };
@@ -75,10 +75,10 @@ const TrailingIcons = ({ icon }) => {
             >
               <Image
                 src={icon}
-                width={24}
-                height={24}
+                width={48}
+                height={48}
                 alt={icon ? "icon" : ""}
-                className='w-12 h-12'
+                className='w-16 h-16'
                 onError={(e) => {
                   e.target.src = ""; // Gracefully handle invalid image src
                 }}
