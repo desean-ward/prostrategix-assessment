@@ -8,9 +8,11 @@ import useWeatherStore from "@/app/stores/weather-store";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import WeatherPerson from "../weather-person/weather-person.component";
+import TrailingIcons from "../ui/trailing-icons/trailing-icons.ui";
 
 const Home = () => {
-  const { setFiveDayData, setLoading, setCurrentCity } = useWeatherStore();
+  const { fiveDayData, setFiveDayData, setLoading, setCurrentCity } =
+    useWeatherStore();
 
   const [sValue, setSValue] = useState(
     typeof window !== "undefined" && window.innerWidth >= 810 ? "-5" : ""
@@ -93,8 +95,12 @@ const Home = () => {
       });
   }, []);
 
+  // Concatenate the image URL
+  const imgUrl = `https:${fiveDayData?.current?.condition?.icon}`;
+
   return (
     <HomeWrapper>
+      <TrailingIcons icon={imgUrl} />
       <header className='flex justify-center w-full py-4 mb-4 text-5xl font-bold lg:py-8 md:text-6xl'>
         <div className='absolute flex items-center justify-center w-full top-12 lg:top-12 md:top-4'>
           <span id='anytime' className='text-center anytime'>

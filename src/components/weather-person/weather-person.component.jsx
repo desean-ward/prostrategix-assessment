@@ -63,7 +63,6 @@ const WeatherPerson = () => {
         opacity: 0,
         duration: 0.5,
         ease: "easeIn",
-        delay: 1,
       });
   }, [loading, fiveDayData]);
 

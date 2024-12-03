@@ -15,7 +15,6 @@ export const ChatBubbleContent = tw.div`
   max-w-[75%]
   p-4
   rounded-lg
-  shadow-md
   ${(p) =>
     p.$isLeft
       ? "bg-blue-500 text-white rounded-tl-none"
