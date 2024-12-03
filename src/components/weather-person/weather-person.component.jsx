@@ -14,13 +14,6 @@ const WeatherPerson = () => {
   const {
     fiveDayData,
     loading,
-    setFavoriteChecked,
-    favoriteCity,
-    setFavoriteCity,
-    currentCity,
-    setCurrentCity,
-    checked,
-    setChecked,
     unit,
   } = useWeatherStore();
 
@@ -73,23 +66,23 @@ const WeatherPerson = () => {
 
   // Get all of the lowest and highest temperatures
   const loTempsF =
-    fiveDayData && fiveDayData.forecast.forecastday
-      ? fiveDayData.forecast.forecastday.map((day) => day.day.mintemp_f)
+    fiveDayData && fiveDayData?.forecast?.forecastday
+      ? fiveDayData?.forecast?.forecastday.map((day) => day.day.mintemp_f)
       : [];
 
   const hiTempsF =
-    fiveDayData && fiveDayData.forecast.forecastday
-      ? fiveDayData.forecast.forecastday.map((day) => day.day.maxtemp_f)
+    fiveDayData && fiveDayData?.forecast?.forecastday
+      ? fiveDayData?.forecast?.forecastday.map((day) => day.day.maxtemp_f)
       : [];
 
   const loTempsC =
-    fiveDayData && fiveDayData.forecast.forecastday
-      ? fiveDayData.forecast.forecastday.map((day) => day.day.mintemp_c)
+    fiveDayData && fiveDayData?.forecast?.forecastday
+      ? fiveDayData?.forecast?.forecastday.map((day) => day.day.mintemp_c)
       : [];
 
   const hiTempsC =
-    fiveDayData && fiveDayData.forecast.forecastday
-      ? fiveDayData.forecast.forecastday.map((day) => day.day.maxtemp_c)
+    fiveDayData && fiveDayData?.forecast?.forecastday
+      ? fiveDayData?.forecast?.forecastday.map((day) => day.day.maxtemp_c)
       : [];
 
   // Get the single lowest and highest temperatures
@@ -104,12 +97,12 @@ const WeatherPerson = () => {
 
   // Construct the left messages
   const leftMessage = `Today's current temperature in ${
-    fiveDayData.location.name
+    fiveDayData?.location?.name
   } is  ${
     unit === "fahrenheit"
-      ? `${fiveDayData.current.temp_f}°F`
-      : `${fiveDayData.current.temp_c}°C`
-  }, with ${fiveDayData.current.condition.text.toLowerCase()} skies.`;
+      ? `${fiveDayData?.current?.temp_f}°F`
+      : `${fiveDayData?.current?.temp_c}°C`
+  }, with ${fiveDayData?.current?.condition.text.toLowerCase()} skies.`;
 
   console.log("UNIT: ", unit);
   // Construct the right messages

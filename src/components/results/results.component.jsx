@@ -12,6 +12,7 @@ import {
 import useWeatherStore from "@/app/stores/weather-store";
 import { useGSAP } from "@gsap/react";
 import { useHydration } from "@/app/stores/hydration-store";
+import Image from "next/image";
 
 const Results = () => {
   // Track hydration status
@@ -169,7 +170,14 @@ const Results = () => {
       <ResultsWrapper id='error'>
         <ResultsContainer>
           <Result>
-            <div className='relative flex items-center justify-center -translate-y-1/2 top-1/2'>
+            <div className='relative flex flex-col items-center justify-center py-8 -translate-y-1/2 top-1/2'>
+              <Image
+                src='/images/error-icon.svg'
+                alt='Error'
+                width={150}
+                height={150}
+                className='mb-4'
+              />
               <p className='text-3xl text-center text-white'>
                 No information found. <br />
                 Please verify the city name and try again.
@@ -182,7 +190,7 @@ const Results = () => {
   }
 
   // Concatenate the image URL
-  const imgUrl = `https:${fiveDayData.current.condition.icon}`;
+  const imgUrl = `https:${fiveDayData?.current?.condition?.icon}` || "";
 
   return (
     <ResultsWrapper id='results'>
@@ -198,10 +206,10 @@ const Results = () => {
           />
           <p id='temp' className='text-3xl mt-[7.5rem] lg:mt-[80px]'>
             {unit === "fahrenheit"
-              ? `${fiveDayData.current.temp_f}° F`
-              : `${fiveDayData.current.temp_c}° C`}
+              ? `${fiveDayData?.current?.temp_f}° F`
+              : `${fiveDayData?.current?.temp_c}° C`}
           </p>
-          <p className='text-2xl'>{fiveDayData.current.condition.text}</p>
+          <p className='text-2xl'>{fiveDayData?.current?.condition.text}</p>
           <p id='city' className='text-5xl font-semibold text-[#F0A606]'>
             {fiveDayData.location.name}
           </p>

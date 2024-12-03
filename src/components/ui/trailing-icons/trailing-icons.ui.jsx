@@ -13,6 +13,7 @@ const TrailingIcons = ({ icon }) => {
     let stopTimer;
 
     const handleMouseMove = (e) => {
+      if (!icon) return; // Exit early if no valid icon is provided
       setIsMouseMoving(true); // Show the trail on movement
       setOpacity(1); // Reset opacity to fully visible
       setCursorPos({ x: e.clientX, y: e.clientY });
@@ -25,7 +26,7 @@ const TrailingIcons = ({ icon }) => {
       stopTimer = setTimeout(() => {
         setIsMouseMoving(false); // Stop mouse movement
         fadeOutTrail(); // Begin fading out
-      }, 50); // 200ms delay after stopping
+      }, 200); // 200ms delay after stopping
     };
 
     const fadeOutTrail = () => {
@@ -36,7 +37,7 @@ const TrailingIcons = ({ icon }) => {
             setTrail([]); // Clear the trail completely
             return 0;
           }
-          return prev - 0.150; // Decrease opacity gradually
+          return prev - 0.15; // Decrease opacity gradually
         });
       }, 50); // Fade step every 50ms
     };
@@ -47,7 +48,7 @@ const TrailingIcons = ({ icon }) => {
       window.removeEventListener("mousemove", handleMouseMove);
       clearTimeout(stopTimer);
     };
-  }, []);
+  }, [icon]); // Re-run if the icon changes
 
   useEffect(() => {
     if (trail.length > 20) {
@@ -58,28 +59,32 @@ const TrailingIcons = ({ icon }) => {
 
   return (
     <TrailWrapper>
-      {trail
-        .slice()
-        .reverse() // Reverse to make the largest icon closest to the cursor
-        .map((position, index) => (
-          <IconTrail
-            key={index}
-            style={{
-              left: `${position.x + 8}px`, // Offset by 0.5rem (8px)
-              top: `${position.y + 8}px`,
-              transform: `translate(-50%, -50%) scale(${1.2 - index * 0.05})`,
-              opacity: `${opacity * (1 - index * 0.05)}`, // Combine trail opacity with global opacity
-            }}
-          >
-            <Image
-              src={icon}
-              width={24}
-              height={24}
-              alt="icon"
-              className="w-12 h-12"
-            />
-          </IconTrail>
-        ))}
+      {icon && // Only render the trail if the icon is valid
+        trail
+          .slice()
+          .reverse() // Reverse to make the largest icon closest to the cursor
+          .map((position, index) => (
+            <IconTrail
+              key={index}
+              style={{
+                left: `${position.x + 8}px`, // Offset by 0.5rem (8px)
+                top: `${position.y + 8}px`,
+                transform: `translate(-50%, -50%) scale(${1.2 - index * 0.05})`,
+                opacity: `${opacity * (1 - index * 0.05)}`, // Combine trail opacity with global opacity
+              }}
+            >
+              <Image
+                src={icon}
+                width={24}
+                height={24}
+                alt={icon ? "icon" : ""}
+                className='w-12 h-12'
+                onError={(e) => {
+                  e.target.src = ""; // Gracefully handle invalid image src
+                }}
+              />
+            </IconTrail>
+          ))}
     </TrailWrapper>
   );
 };

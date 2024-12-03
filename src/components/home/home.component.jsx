@@ -96,7 +96,9 @@ const Home = () => {
   }, []);
 
   // Concatenate the image URL
-  const imgUrl = `https:${fiveDayData?.current?.condition?.icon}`;
+  const imgUrl =
+    `https:${fiveDayData?.current?.condition?.icon}` ||
+    "/images/error-icon.svg";
 
   return (
     <HomeWrapper>
@@ -115,7 +117,7 @@ const Home = () => {
         </div>
       </header>
       <HomeContainer>
-        <WeatherPerson />
+        {fiveDayData?.location?.name && <WeatherPerson />}
         <InputForm />
         <Results />
       </HomeContainer>
